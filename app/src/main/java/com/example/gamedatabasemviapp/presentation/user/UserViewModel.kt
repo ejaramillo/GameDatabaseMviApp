@@ -1,22 +1,21 @@
 package com.example.gamedatabasemviapp.presentation.user
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.gamedatabasemviapp.data.MainRepository
-import com.example.gamedatabasemviapp.data.model.GameInfoModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 
-class UserViewModel(
+internal class UserViewModel(
     private val mainRepository: MainRepository
 ) : ViewModel() {
     val queryGameIntent = Channel<UserAction>(Channel.UNLIMITED)
-    private val _queryGameState = MutableStateFlow<UserUiState<List<GameInfoModel>>>(UserUiState.Idle)
-    val queryGameState: StateFlow<UserUiState<List<GameInfoModel>>>
+    private val _queryGameState = MutableStateFlow<UserUiState>(UserUiState.DefaultUiState)
+    val queryGameState: StateFlow<UserUiState>
         get() = _queryGameState
 
     init {
@@ -35,13 +34,20 @@ class UserViewModel(
 
     private fun searchGame(queryGame: String) {
         viewModelScope.launch {
-            if (queryGame.isEmpty()) {
-                _queryGameState.value = UserUiState.Loading
-                mainRepository.searchGames(queryGame).collect {
-                    _queryGameState.value = it
+            if (queryGame.isEmpty()){
+                _queryGameState.value = UserUiState.EmptyUiState
+            } else {
+                _queryGameState.value = UserUiState.LoadingUiState
+                mainRepository.searchGames(queryGame).collect {userUiState ->
+                    _queryGameState.value = userUiState
                 }
             }
         }
     }
+}
 
+internal class UserViewModelFactory(private val mainRepository: MainRepository): ViewModelProvider.Factory{
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return UserViewModel(mainRepository) as T
+    }
 }

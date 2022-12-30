@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">GameDatabaseMviApp</string>
+    <string name="search_your_game_in_here">Search your game in here</string>
+    <string name="let_s_search_your_favorite_game">Let\'s search your favorite game :)</string>
+    <string name="game_not_found">Sorry, your game is not found :(</string>
 </resources>

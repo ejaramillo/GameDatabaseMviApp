@@ -1,4 +1,4 @@
-package com.example.gamedatabasemviapp.data.model
+package com.example.gamedatabasemviapp.data.remote.model
 
 import com.google.gson.annotations.SerializedName
 

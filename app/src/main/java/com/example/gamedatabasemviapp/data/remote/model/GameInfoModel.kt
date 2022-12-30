@@ -1,9 +1,11 @@
-package com.example.gamedatabasemviapp.data.model
+package com.example.gamedatabasemviapp.data.remote.model
 
+import com.example.gamedatabasemviapp.data.remote.Constants
+import com.example.gamedatabasemviapp.data.remote.Constants.ID
 import com.google.gson.annotations.SerializedName
 
 data class GameInfoModel(
-    @SerializedName("id")
+    @SerializedName(ID)
     val id: Int?,
     @SerializedName("name")
     val name: String?,
