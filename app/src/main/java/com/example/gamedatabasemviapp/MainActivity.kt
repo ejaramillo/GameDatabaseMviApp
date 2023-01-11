@@ -5,19 +5,15 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.gamedatabasemviapp.data.MainRepository
-import com.example.gamedatabasemviapp.data.datasource.NetworkRepositoryImpl
-import com.example.gamedatabasemviapp.data.network.RetrofitService
 import com.example.gamedatabasemviapp.databinding.ActivityMainBinding
-import com.example.gamedatabasemviapp.presentation.user.UserAction
 import com.example.gamedatabasemviapp.presentation.user.UserUiState
 import com.example.gamedatabasemviapp.presentation.user.UserViewModel
 import com.example.gamedatabasemviapp.presentation.user.UserViewModelFactory
 import com.example.gamedatabasemviapp.ui.listuser.GamesAdapter
+import com.example.gamedatabasemviapp.ui.listuser.UserIntentHandler
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,14 +21,16 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 @ExperimentalCoroutinesApi
-class MainActivity : AppCompatActivity() {
+internal class MainActivity : AppCompatActivity() {
 
     private val gamesAdapter: GamesAdapter by lazy { GamesAdapter() }
     private lateinit var userViewModel: UserViewModel
 
     private lateinit var binding: ActivityMainBinding
-
     private var disposable: Disposable? = null
+    private val userIntentHandler = UserIntentHandler().apply {
+        this.coroutineScope = lifecycleScope
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         initView()
         initViewModel()
-        loadGameData()
+        userContent()
         observerTextInput()
     }
 
@@ -58,27 +56,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        val vm by viewModels<UserViewModel> {
-            UserViewModelFactory(
-                MainRepository(NetworkRepositoryImpl(RetrofitService.apiService))
-            )
-        }
+        val vm by viewModels<UserViewModel> { UserViewModelFactory() }
         userViewModel = vm
+        userViewModel.processUserIntentsAndObserveUiStates(userIntentHandler.userIntents())
     }
 
     private fun observerTextInput() {
         disposable =
             RxTextView.textChanges(binding.edtSearchGame).throttleLast(2000, TimeUnit.MILLISECONDS)
                 .subscribe {
-                    lifecycleScope.launch {
-                        userViewModel.queryGameIntent.send(UserAction.FetchGamesAction(it.toString()))
-                    }
+                    if(!it.toString().isEmpty())
+                        userIntentHandler.getListGameUIntent(it.toString())
                 }
     }
 
-    private fun loadGameData() {
+    private fun userContent() {
         lifecycleScope.launch {
-            userViewModel.queryGameState.collect { userUiState ->
+            userViewModel.uiState.collect { userUiState ->
                 when (userUiState) {
                     is UserUiState.DefaultUiState -> {
                         binding.run {

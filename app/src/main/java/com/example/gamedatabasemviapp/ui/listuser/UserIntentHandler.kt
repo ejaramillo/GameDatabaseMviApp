@@ -1,25 +1,24 @@
 package com.example.gamedatabasemviapp.ui.listuser
 
 import com.example.gamedatabasemviapp.presentation.user.UserUIntent
-import com.example.gamedatabasemviapp.presentation.user.UserUIntent.InitialUIntent
-import com.example.gamedatabasemviapp.presentation.user.UserUIntent.PressButtonUIntent
+import com.example.gamedatabasemviapp.presentation.user.UserUIntent.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
+@ExperimentalCoroutinesApi
 internal class UserIntentHandler {
     private val userIntents = MutableSharedFlow<UserUIntent>()
-    val coroutineScope: CoroutineScope? = null
+    var coroutineScope: CoroutineScope? = null
 
-    fun initialUIntent() {
-        coroutineScope?.launch {
-            userIntents.emit(InitialUIntent)
-        }
-    }
+    internal fun userIntents(): Flow<UserUIntent> = userIntents.asSharedFlow()
 
-    fun pressButtonUIntent() {
+    fun getListGameUIntent(seachText: String){
         coroutineScope?.launch {
-            userIntents.emit(PressButtonUIntent)
+            userIntents.emit(SearchGameEdtChangeUIntent(seachText))
         }
     }
 }
