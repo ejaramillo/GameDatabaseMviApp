@@ -8,7 +8,11 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.gamedatabasemviapp.data.datasource.RemoteDataSource
+import com.example.gamedatabasemviapp.data.repository.NetworkRepository
 import com.example.gamedatabasemviapp.databinding.ActivityMainBinding
+import com.example.gamedatabasemviapp.framework.network.NetworkRemoteDataSource
+import com.example.gamedatabasemviapp.presentation.user.UserProcessor
 import com.example.gamedatabasemviapp.presentation.user.UserUiState
 import com.example.gamedatabasemviapp.presentation.user.UserViewModel
 import com.example.gamedatabasemviapp.presentation.user.UserViewModelFactory
@@ -24,6 +28,19 @@ import java.util.concurrent.TimeUnit
 internal class MainActivity : AppCompatActivity() {
 
     private val gamesAdapter: GamesAdapter by lazy { GamesAdapter() }
+
+    val remoteDataSource: RemoteDataSource by lazy{
+        NetworkRemoteDataSource("a51ef38e6d754bdc919a4104b0387fa3")
+    }
+
+    val repository: NetworkRepository by lazy {
+        NetworkRepository(remoteDataSource)
+    }
+
+    private val processor: UserProcessor by lazy {
+        UserProcessor(repository)
+    }
+
     private lateinit var userViewModel: UserViewModel
 
     private lateinit var binding: ActivityMainBinding

@@ -1,7 +1,8 @@
 package com.example.gamedatabasemviapp.presentation.user
 
-import com.example.gamedatabasemviapp.data.datasource.NetworkRepository
-import com.example.gamedatabasemviapp.data.remote.model.GameResponseModel
+import com.example.gamedatabasemviapp.data.datasource.RemoteDataSource
+import com.example.gamedatabasemviapp.data.repository.NetworkRepository
+import com.example.gamedatabasemviapp.framework.network.NetworkRemoteDataSource
 import com.example.gamedatabasemviapp.presentation.user.UserResult.FetchGamesResult
 import com.example.gamedatabasemviapp.presentation.user.UserResult.FetchGamesResult.Empty
 import com.example.gamedatabasemviapp.presentation.user.UserResult.FetchGamesResult.Error
@@ -15,9 +16,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
 
-internal class UserProcessor {
-
-    val repository = NetworkRepository()
+internal class UserProcessor(val repository: NetworkRepository) {
 
     fun actionProcessor(actions: UserAction): Flow<UserResult> =
         when (actions) {
@@ -25,7 +24,7 @@ internal class UserProcessor {
         }
 
     private  fun loadGamesProcessor(queryGame: String): Flow<FetchGamesResult> =
-        repository.searchGames("a51ef38e6d754bdc919a4104b0387fa3",queryGame)
+        repository.searchGames(queryGame)
             .map { response ->
                 if(response.gameDataResults?.isEmpty()?:true){
                     Empty

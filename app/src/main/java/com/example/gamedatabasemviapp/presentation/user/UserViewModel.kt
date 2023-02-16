@@ -3,6 +3,9 @@ package com.example.gamedatabasemviapp.presentation.user
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.gamedatabasemviapp.data.datasource.RemoteDataSource
+import com.example.gamedatabasemviapp.data.repository.NetworkRepository
+import com.example.gamedatabasemviapp.framework.network.NetworkRemoteDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -15,12 +18,15 @@ import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.scan
+import okhttp3.internal.userAgent
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-internal class UserViewModel : ViewModel() {
+internal class UserViewModel constructor(
+    val processor: UserProcessor
+) : ViewModel() {
+
     private val reducer = UserReducer()
-    private val processor = UserProcessor()
 
     val defaultUiState: UserUiState = UserUiState.DefaultUiState
     private val _uiState: MutableStateFlow<UserUiState> = MutableStateFlow(defaultUiState)
@@ -54,7 +60,7 @@ internal class UserViewModel : ViewModel() {
     }
 }
 
-internal class UserViewModelFactory :
+internal class UserViewModelFactory(userProcessor: UserProcessor) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return UserViewModel() as T

@@ -1,4 +1,4 @@
-package com.example.gamedatabasemviapp.data.network
+package com.example.gamedatabasemviapp.framework.network
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

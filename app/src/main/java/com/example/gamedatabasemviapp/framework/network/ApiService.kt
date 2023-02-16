@@ -1,4 +1,4 @@
-package com.example.gamedatabasemviapp.data.network
+package com.example.gamedatabasemviapp.framework.network
 
 import com.example.gamedatabasemviapp.data.remote.model.GameResponseModel
 import retrofit2.http.GET
