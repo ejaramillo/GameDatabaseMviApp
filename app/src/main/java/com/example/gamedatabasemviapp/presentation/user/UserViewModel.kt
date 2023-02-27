@@ -1,11 +1,12 @@
 package com.example.gamedatabasemviapp.presentation.user
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.example.gamedatabasemviapp.data.datasource.RemoteDataSource
-import com.example.gamedatabasemviapp.data.repository.NetworkRepository
-import com.example.gamedatabasemviapp.framework.network.NetworkRemoteDataSource
+import androidx.lifecycle.viewmodel.CreationExtras
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -18,12 +19,12 @@ import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.scan
-import okhttp3.internal.userAgent
+import kotlinx.coroutines.processNextEventInCurrentThread
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 internal class UserViewModel constructor(
-    val processor: UserProcessor
+    private val processor: UserProcessor
 ) : ViewModel() {
 
     private val reducer = UserReducer()
@@ -60,10 +61,12 @@ internal class UserViewModel constructor(
     }
 }
 
-internal class UserViewModelFactory(userProcessor: UserProcessor) :
+
+
+internal class UserViewModelFactory(private val procesor: UserProcessor) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return UserViewModel() as T
+        return modelClass.getConstructor(UserProcessor::class.java).newInstance(procesor)
     }
 }
 

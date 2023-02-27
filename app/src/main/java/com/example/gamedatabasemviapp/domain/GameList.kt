@@ -1,8 +1,8 @@
-package com.example.gamedatabasemviapp.data.remote.model
+package com.example.gamedatabasemviapp.domain
 
 import com.google.gson.annotations.SerializedName
 
-data class GameResponseModel(
+data class GameList(
     @SerializedName("results")
     val gameDataResults: List<GameInfoModel>?
 )

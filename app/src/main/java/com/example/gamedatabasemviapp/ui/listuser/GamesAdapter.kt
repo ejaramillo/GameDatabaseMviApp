@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gamedatabasemviapp.R
-import com.example.gamedatabasemviapp.data.remote.model.GameInfoModel
+import com.example.gamedatabasemviapp.domain.GameInfoModel
 import com.example.gamedatabasemviapp.databinding.ItemGameBinding
 import com.example.gamedatabasemviapp.ui.listuser.GameViewHolder.Companion.DIFF_UTIL
 

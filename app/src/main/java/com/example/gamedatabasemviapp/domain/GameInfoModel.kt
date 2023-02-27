@@ -1,7 +1,6 @@
-package com.example.gamedatabasemviapp.data.remote.model
+package com.example.gamedatabasemviapp.domain
 
-import com.example.gamedatabasemviapp.data.remote.Constants
-import com.example.gamedatabasemviapp.data.remote.Constants.ID
+import com.example.gamedatabasemviapp.data.Constants.ID
 import com.google.gson.annotations.SerializedName
 
 data class GameInfoModel(

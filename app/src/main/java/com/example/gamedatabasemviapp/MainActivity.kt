@@ -73,7 +73,7 @@ internal class MainActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        val vm by viewModels<UserViewModel> { UserViewModelFactory() }
+        val vm by viewModels<UserViewModel> { UserViewModelFactory(procesor = processor) }
         userViewModel = vm
         userViewModel.processUserIntentsAndObserveUiStates(userIntentHandler.userIntents())
     }

@@ -1,8 +1,6 @@
 package com.example.gamedatabasemviapp.presentation.user
 
-import com.example.gamedatabasemviapp.data.datasource.RemoteDataSource
 import com.example.gamedatabasemviapp.data.repository.NetworkRepository
-import com.example.gamedatabasemviapp.framework.network.NetworkRemoteDataSource
 import com.example.gamedatabasemviapp.presentation.user.UserResult.FetchGamesResult
 import com.example.gamedatabasemviapp.presentation.user.UserResult.FetchGamesResult.Empty
 import com.example.gamedatabasemviapp.presentation.user.UserResult.FetchGamesResult.Error
